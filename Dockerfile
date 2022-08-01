@@ -93,6 +93,9 @@ LABEL org.opencontainers.image.revision=$REVISION
 # Compatability with https://hub.docker.com/r/willfarrell/autoheal/
 LABEL autoheal=true
 
+# Compatability with https://github.com/qdm12/deunhealth
+LABEL deunhealth.restart.on.unhealthy=true
+
 # Expose port and run
 
 #Transmission-RPC

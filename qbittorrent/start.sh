@@ -47,4 +47,4 @@ sed -i -E 's/^.*\b(WebUI\\Port)\b.*$/\1='"$QBT_WEBUI_PORT"'/' "$CONF_FILE"
 sed -i -E 's|^.*\b(Downloads\\SavePath)\b.*$|\1='"$QBT_DOWNLOAD_DIR"'|' "$CONF_FILE"
 
 echo "STARTING qBitorrent"
-qbittorrent-nox
+qbittorrent-nox -d
