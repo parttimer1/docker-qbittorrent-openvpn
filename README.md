@@ -1,3 +1,18 @@
+### qBittorrent Support
+
+This is a fork off haugene/docker-transmission-openvpn which adds support for qBittorrent. If you wish to use transmission you can set the TORRENT_CLIENT value to "transmission" (or simply just use haugene/docker-transmission-openvpn).
+
+From Dockerfile:
+
+    TORRENT_CLIENT="qbittorrent" \ 
+    QBT_PROFILE="/data" \
+    QBT_WEBUI_PORT=9091 \
+    QBT_DOWNLOAD_DIR=/data/completed
+
+
+QBT_PROFILE is important as qbittorrent-nox reads that and places it's own app data in a subfolder there.
+
+
 # OpenVPN and Transmission with WebUI
 
 [![CircleCI builds](https://img.shields.io/circleci/build/github/haugene/docker-transmission-openvpn)](https://circleci.com/gh/haugene/docker-transmission-openvpn)

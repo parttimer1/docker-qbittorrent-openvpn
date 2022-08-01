@@ -30,8 +30,14 @@ RUN apt-get update && apt-get install -y \
     && ln -s /usr/share/transmission/web/style /opt/transmission-ui/transmission-web-control \
     && ln -s /usr/share/transmission/web/images /opt/transmission-ui/transmission-web-control \
     && ln -s /usr/share/transmission/web/javascript /opt/transmission-ui/transmission-web-control \
-    && ln -s /usr/share/transmission/web/index.html /opt/transmission-ui/transmission-web-control/index.original.html \
-    && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* \
+    && ln -s /usr/share/transmission/web/index.html /opt/transmission-ui/transmission-web-control/index.original.html 
+
+RUN apt-get install -y software-properties-common \
+    && add-apt-repository -y ppa:qbittorrent-team/qbittorrent-stable \
+    && apt update \
+    && apt install -y qbittorrent-nox
+
+RUN rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* \
     && groupmod -g 1000 users \
     && useradd -u 911 -U -d /config -s /bin/false abc \
     && usermod -G users abc
@@ -40,6 +46,7 @@ RUN apt-get update && apt-get install -y \
 # Add configuration and scripts
 ADD openvpn/ /etc/openvpn/
 ADD transmission/ /etc/transmission/
+ADD qbittorrent/ /etc/qbittorrent/
 ADD scripts /etc/scripts/
 ADD privoxy/scripts /opt/privoxy/
 
@@ -68,7 +75,11 @@ ENV OPENVPN_USERNAME=**None** \
     WEBPROXY_PASSWORD= \
     LOG_TO_STDOUT=false \
     HEALTH_CHECK_HOST=google.com \
-    SELFHEAL=false
+    SELFHEAL=false \
+    TORRENT_CLIENT="qbittorrent" \ 
+    QBT_PROFILE="/data" \
+    QBT_WEBUI_PORT=9091 \
+    QBT_DOWNLOAD_DIR=/data/completed
 
 HEALTHCHECK --interval=1m CMD /etc/scripts/healthcheck.sh
 

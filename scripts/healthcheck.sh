@@ -41,16 +41,27 @@ echo "Network is up"
 #Service check
 #Expected output is 2 for both checks, 1 for process and 1 for grep
 OPENVPN=$(pgrep openvpn | wc -l )
-TRANSMISSION=$(pgrep transmission | wc -l)
+
+if [[ -z "$TORRENT_CLIENT" ]] 
+then
+    TORRENT_CLIENT="transmission"
+fi
+
+if [[ TORRENT_CLIENT -eq "qbittorrent" ]] 
+then
+    TORRENT_PROCESS=$(pgrep qbittorrent-nox | wc -l)
+else
+    TORRENT_PROCESS=$(pgrep transmission | wc -l)
+fi
 
 if [[ ${OPENVPN} -ne 1 ]]; then
 	echo "Openvpn process not running"
 	exit 1
 fi
-if [[ ${TRANSMISSION} -ne 1 ]]; then
-	echo "transmission-daemon process not running"
+if [[ ${TORRENT_PROCESS} -ne 1 ]]; then
+	echo "$TORRENT_CLIENT process not running"
 	exit 1
 fi
 
-echo "Openvpn and transmission-daemon processes are running"
+echo "Openvpn and $TORRENT_CLIENT processes are running"
 exit 0

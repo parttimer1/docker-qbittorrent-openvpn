@@ -84,7 +84,7 @@ if [[ -z ${CHOSEN_OPENVPN_CONFIG} ]]; then
 
   if [[ "${VPN_CONFIG_SOURCE}" == "external" ]]; then
     # shellcheck source=openvpn/fetch-external-configs.sh
-    ./etc/openvpn/fetch-external-configs.sh
+    /etc/openvpn/fetch-external-configs.sh
   fi
 
   if [[ -x $VPN_PROVIDER_HOME/configure-openvpn.sh ]]; then
@@ -263,6 +263,10 @@ fi
 if [[ ${SELFHEAL:-false} != "false" ]]; then
   /etc/scripts/selfheal.sh &
 fi
+
+# Persist qbittorrent env vars for when openvpn brings up the tunnel
+env|egrep '^QBT_|^TORRENT'|sed  -E 's/(.*)/export \1/' > /etc/qbittorrent/environment-variables.sh
+
 
 # shellcheck disable=SC2086
 exec openvpn ${TRANSMISSION_CONTROL_OPTS} ${OPENVPN_OPTS} --config "${CHOSEN_OPENVPN_CONFIG}"
