@@ -1,4 +1,4 @@
-### qBittorrent Support
+# qBittorrent Support
 
 This is a fork off haugene/docker-transmission-openvpn which adds support for qBittorrent. If you wish to use transmission you can set the TORRENT_CLIENT value to "transmission" (or simply just use haugene/docker-transmission-openvpn).
 
