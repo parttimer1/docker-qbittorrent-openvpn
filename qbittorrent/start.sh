@@ -46,5 +46,40 @@ sed -i -E 's/^.*\b(WebUI\\Port)\b.*$/\1='"$QBT_WEBUI_PORT"'/' "$CONF_FILE"
 # use pipe delimter because QBT_DOWNLOAD_DIR contains slashes
 sed -i -E 's|^.*\b(Downloads\\SavePath)\b.*$|\1='"$QBT_DOWNLOAD_DIR"'|' "$CONF_FILE"
 
+
+# configure the jackett plugin
+if [ -e "$QBT_PROFILE/jackett/config/Jackett/ServerConfig.json" ]
+then
+
+    echo "Copying jackett.py to $QBT_PROFILE/qBittorrent/data/nova3/engines/"
+    cp /etc/qbittorrent/jackett.py $QBT_PROFILE/qBittorrent/data/nova3/engines/
+
+    # the api key should always resolve on the first try because openvpn takes longer to start. but just in case it doesnt then retry a few times
+    for i in {0..5}
+    do
+        if [ $i -gt 0 ]
+        then
+            echo "[$i/5] Waiting 10s for jackett api key"
+            sleep 10
+        fi
+
+        apiKey=$(cat $QBT_PROFILE/jackett/config/Jackett/ServerConfig.json|jq '.["APIKey"]'|sed 's/"//g')
+        if [ -n $apiKey ]
+        then
+            break
+        fi
+    done
+    
+    echo "Jackett api key: $apiKey"
+     
+    cat <<EOF - > $QBT_PROFILE/qBittorrent/data/nova3/engines/jackett.json
+    {
+        "api_key": "$apiKey",
+        "tracker_first": false,
+        "url": "$JACKETT_URL"
+    }
+EOF
+fi
+
 echo "STARTING qBitorrent"
 qbittorrent-nox -d

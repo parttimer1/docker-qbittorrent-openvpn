@@ -42,13 +42,15 @@ RUN rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* \
     && useradd -u 911 -U -d /config -s /bin/false abc \
     && usermod -G users abc
 
-
 # Add configuration and scripts
 ADD openvpn/ /etc/openvpn/
 ADD transmission/ /etc/transmission/
 ADD qbittorrent/ /etc/qbittorrent/
 ADD scripts /etc/scripts/
 ADD privoxy/scripts /opt/privoxy/
+
+# download jackett plugin for qbittorrent search feature
+RUN curl -sL https://raw.githubusercontent.com/qbittorrent/search-plugins/master/nova3/engines/jackett.py > /etc/qbittorrent/jackett.py
 
 ENV OPENVPN_USERNAME=**None** \
     OPENVPN_PASSWORD=**None** \
@@ -79,7 +81,8 @@ ENV OPENVPN_USERNAME=**None** \
     TORRENT_CLIENT="qbittorrent" \ 
     QBT_PROFILE="/data" \
     QBT_WEBUI_PORT=9091 \
-    QBT_DOWNLOAD_DIR=/data/completed
+    QBT_DOWNLOAD_DIR=/data/completed \
+    JACKETT_URL=http://badurl:666666
 
 HEALTHCHECK --interval=1m CMD /etc/scripts/healthcheck.sh
 

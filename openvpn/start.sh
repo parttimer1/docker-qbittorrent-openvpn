@@ -265,7 +265,7 @@ if [[ ${SELFHEAL:-false} != "false" ]]; then
 fi
 
 # Persist qbittorrent env vars for when openvpn brings up the tunnel
-env|egrep '^QBT_|^TORRENT'|sed  -E 's/(.*)/export \1/' > /etc/qbittorrent/environment-variables.sh
+env|egrep '^QBT_|^TORRENT|^JACKETT_URL'|sed  -E 's/(.*)/export \1/' > /etc/qbittorrent/environment-variables.sh
 
 
 # shellcheck disable=SC2086
