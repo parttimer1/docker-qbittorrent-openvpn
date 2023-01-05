@@ -6,14 +6,18 @@
 # Source our persisted env variables from container startup
 . /etc/qbittorrent/environment-variables.sh
 
-echo "qBittorrent up script executed with $*"
-
-if [[ "$4" = "" ]]; then
+# This script will be called with OpenVPN environment variables
+# See https://openvpn.net/community-resources/reference-manual-for-openvpn-2-4/#scripting-and-environmental-variables
+echo "qBittorrent Up script executed with device=$dev ifconfig_local=$ifconfig_local"
+if [[ "$ifconfig_local" = "" ]]; then
   echo "ERROR, unable to obtain tunnel address"
   echo "killing $PPID"
   kill -9 $PPID
   exit 1
 fi
+
+# Re-create `--up` command arguments to maintain compatibility with old user scripts
+USER_SCRIPT_ARGS=("$dev" "$tun_mtu" "$link_mtu" "$ifconfig_local" "$ifconfig_remote" "$script_context")
 
 if [[ ! -d "$QBT_PROFILE" ]] 
 then
@@ -28,8 +32,8 @@ then
     exit 1
 fi
 
-TUN=$1
-IFACE_ADDR=$4
+TUN=${USER_SCRIPT_ARGS[1]}
+IFACE_ADDR=${USER_SCRIPT_ARGS[4]}
 CONF_PATH=$QBT_PROFILE/qBittorrent/config
 CONF_FILE=$CONF_PATH/qBittorrent.conf
 

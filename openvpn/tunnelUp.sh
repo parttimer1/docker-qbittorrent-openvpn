@@ -69,7 +69,7 @@ then
 fi
 
 /etc/$TORRENT_CLIENT/start.sh "$@"
-/etc/transmission/start.sh
+
 [[ -f /opt/privoxy/start.sh && -x /opt/privoxy/start.sh ]] && /opt/privoxy/start.sh
 
 exit 0

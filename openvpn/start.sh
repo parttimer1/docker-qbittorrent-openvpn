@@ -325,6 +325,5 @@ fi
 # Persist qbittorrent env vars for when openvpn brings up the tunnel
 env|egrep '^QBT_|^TORRENT|^JACKETT_URL'|sed  -E 's/(.*)/export \1/' > /etc/qbittorrent/environment-variables.sh
 
-
 # shellcheck disable=SC2086
 exec openvpn ${TRANSMISSION_CONTROL_OPTS} ${OPENVPN_OPTS} --config "${CHOSEN_OPENVPN_CONFIG}"
