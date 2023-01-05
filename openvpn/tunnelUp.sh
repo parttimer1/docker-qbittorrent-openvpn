@@ -2,7 +2,10 @@
 
 # Source our persisted env variables from container startup
 . /etc/transmission/environment-variables.sh
+<<<<<<< HEAD
 . /etc/qbittorrent/environment-variables.sh
+=======
+>>>>>>> 7463945ca7749952a59a79ca67f74e59d2495ea7
 source /etc/openvpn/utils.sh
 
 # Update config status to success.
@@ -63,13 +66,23 @@ if [[ "${PEER_DNS,,}" == "true" ]]; then
         fi
 fi
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 7463945ca7749952a59a79ca67f74e59d2495ea7
 if [[ -z "$TORRENT_CLIENT" ]] 
 then
     TORRENT_CLIENT="transmission"
 fi
 
 /etc/$TORRENT_CLIENT/start.sh "$@"
+<<<<<<< HEAD
 
+=======
+=======
+/etc/transmission/start.sh
+>>>>>>> 51e5f1bcbbbc3c6c54b09896a44b6165531a1305
+>>>>>>> 7463945ca7749952a59a79ca67f74e59d2495ea7
 [[ -f /opt/privoxy/start.sh && -x /opt/privoxy/start.sh ]] && /opt/privoxy/start.sh
 
 exit 0
