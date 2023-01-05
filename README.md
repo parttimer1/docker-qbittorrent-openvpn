@@ -36,18 +36,6 @@ If you have found what you believe to be an issue or bug, create an issue and pr
 enough details for us to have a chance to reproduce it or undertand what's going on.
 **NB:** Be sure to search for similar issues (open and closed) before opening a new one.
 
-### Just started having problems?
-
-We've just merged a larger release from dev to the master branch.
-This means that the `latest` tag of this image now is version 4.0.
-
-If this release causes issues for you, try running the latest 3.x release:
-`haugene/transmission-openvpn:3.7.1`. Note that this is a temporary fix,
-there will not be any more releases on the 3.x line.
-
-Any instabilities with 4.0, please take it up in the 4.0 release discussion:
-[https://github.com/haugene/docker-transmission-openvpn/discussions/1936](https://github.com/haugene/docker-transmission-openvpn/discussions/1936)
-
 ## Quick Start
 
 These examples shows valid setups using PIA as provider for both
@@ -59,6 +47,7 @@ at some point, but this is a good place to start.
 ```
 $ docker run --cap-add=NET_ADMIN -d \
               -v /your/storage/path/:/data \
+              -v /your/config/path/:/config \
               -e OPENVPN_PROVIDER=PIA \
               -e OPENVPN_CONFIG=france \
               -e OPENVPN_USERNAME=user \
@@ -79,6 +68,7 @@ services:
             - NET_ADMIN
         volumes:
             - '/your/storage/path/:/data'
+            - '/your/config/path/:/config'
         environment:
             - OPENVPN_PROVIDER=PIA
             - OPENVPN_CONFIG=france
@@ -93,6 +83,26 @@ services:
             - '9091:9091'
         image: haugene/transmission-openvpn
 ```
+
+## Known issues
+
+If you've been running a stable setup that has recently started to fail, please check your logs.
+Are you seeing `curl: (6) getaddrinfo() thread failed to start` or `WARNING: initial DNS resolution test failed`?
+Then have a look at [#2410](https://github.com/haugene/docker-transmission-openvpn/issues/2410)
+and [this comment](https://github.com/haugene/docker-transmission-openvpn/issues/2410#issuecomment-1319299598)
+in particular. There is a fix and a workaround available.
+
+## Image versioning
+
+We aim to create periodic fixed releases with a [semver](https://semver.org/) versioning scheme.
+The latest of the tagged fixed releases will also have the `latest` tag.
+
+A semver release will be tagged with `major`, `major.minor` and `major.minor.patch` versions so that you can lock
+the version at either level.
+
+We also have a tag called `edge` which will always be the latest commit on `master`, and `dev` which is the last commit on the `dev` branch.
+From time to time we can also have various `beta` branches and tags, but using either dev or beta tags is probably not for the average user
+and you should expect there to be occasional breakage or even the deletion of the tags upstream.
 
 ## Please help out (about:maintenance)
 This image was created for my own use, but sharing is caring, so it had to be open source.

@@ -16,7 +16,7 @@ RUN apk --no-cache add curl jq \
     && mkdir /opt/transmission-ui/transmission-web-control \
     && curl -sL $(curl -s https://api.github.com/repos/ronggang/transmission-web-control/releases/latest | jq --raw-output '.tarball_url') | tar -C /opt/transmission-ui/transmission-web-control/ --strip-components=2 -xz
 
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 VOLUME /data
 VOLUME /config
@@ -55,9 +55,12 @@ RUN curl -sL https://raw.githubusercontent.com/qbittorrent/search-plugins/master
 ENV OPENVPN_USERNAME=**None** \
     OPENVPN_PASSWORD=**None** \
     OPENVPN_PROVIDER=**None** \
+    OPENVPN_OPTS= \
     GLOBAL_APPLY_PERMISSIONS=true \
-    TRANSMISSION_HOME=/data/transmission-home \
+    TRANSMISSION_HOME=/config/transmission-home \
     TRANSMISSION_RPC_PORT=9091 \
+    TRANSMISSION_RPC_USERNAME= \
+    TRANSMISSION_RPC_PASSWORD= \
     TRANSMISSION_DOWNLOAD_DIR=/data/completed \
     TRANSMISSION_INCOMPLETE_DIR=/data/incomplete \
     TRANSMISSION_WATCH_DIR=/data/watch \
@@ -86,20 +89,14 @@ ENV OPENVPN_USERNAME=**None** \
 
 HEALTHCHECK --interval=1m CMD /etc/scripts/healthcheck.sh
 
-# Add labels to identify this image and version
+# Pass revision as a build arg, set it as env var
 ARG REVISION
-# Set env from build argument or default to empty string
 ENV REVISION=${REVISION:-""}
-LABEL org.opencontainers.image.source=https://github.com/haugene/docker-transmission-openvpn
-LABEL org.opencontainers.image.revision=$REVISION
 
 # Compatability with https://hub.docker.com/r/willfarrell/autoheal/
 LABEL autoheal=true
 
-# Compatability with https://github.com/qdm12/deunhealth
-LABEL deunhealth.restart.on.unhealthy=true
-
-# Expose port and run
+# Expose ports and run
 
 #Transmission-RPC
 EXPOSE 9091
