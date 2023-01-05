@@ -14,6 +14,7 @@ args = parser.parse_args()
 
 wanted_variables = {
     'OPENVPN_PROVIDER',
+    'DEBUG',
     'ENABLE_UFW',
     'PUID',
     'PGID',
@@ -23,7 +24,8 @@ wanted_variables = {
     'DISABLE_PORT_UPDATER',
     'TZ',
     'PEER_DNS',
-    'PEER_DNS_PIN_ROUTES'
+    'PEER_DNS_PIN_ROUTES',
+    'CONFIG'
 }
 
 variables_to_persist = {}
